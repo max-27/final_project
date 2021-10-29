@@ -1,0 +1,630 @@
+<?xml version='1.0'?>
+<sdf version='1.4'>
+
+  <!-- MARKER 1 -->
+  <model name='Marker1'>
+    <pose frame=''>0 0 0 0 0 0</pose>
+    <static>1</static>
+    <link name='marker_holder1'>
+      <pose frame=''>3.03 1.15 0 0 0 1.57075</pose>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <bounce/>
+          <friction>
+            <torsional>
+              <ode/>
+            </torsional>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>MarkerHolder/Image</name>
+          </script>
+          <ambient>0.95 0.95 0.95 1</ambient>
+        </material>
+      </visual>
+      <self_collide>0</self_collide>
+      <inertial>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+    </link>
+    <link name='marker1'>
+      <pose frame=''>3.03 1.15 0 0 0 1.57075</pose>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <slip1>0.5</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+          <bounce/>
+        </surface>
+        <max_contacts>10</max_contacts>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>Marker1/Image</name>
+          </script>
+          <ambient>0.95 0.95 0.95 1</ambient>
+        </material>
+      </visual>
+      <self_collide>0</self_collide>
+      <inertial>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+    </link>
+    <joint name='holding' type='fixed'>
+      <pose frame=''>3.03 1.15 0 0 0 1.57075</pose>
+      <child>marker1</child>
+      <parent>marker_stand1</parent>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <use_parent_model_frame>1</use_parent_model_frame>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+    </joint>
+
+    <!-- MARKER 2 -->
+    <link name='marker_holder2'>
+      <pose frame=''>2.67 3.23 0 0 0 -0.7854</pose>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <bounce/>
+          <friction>
+            <torsional>
+              <ode/>
+            </torsional>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>MarkerHolder/Image</name>
+          </script>
+          <ambient>0.95 0.95 0.95 1</ambient>
+        </material>
+      </visual>
+      <self_collide>0</self_collide>
+      <inertial>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+    </link>
+    <link name='marker2'>
+      <pose frame=''>2.67 3.23 0 0 0 -0.7854</pose>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <slip1>0.5</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+          <bounce/>
+        </surface>
+        <max_contacts>10</max_contacts>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>Marker2/Image</name>
+          </script>
+          <ambient>0.95 0.95 0.95 1</ambient>
+        </material>
+      </visual>
+      <self_collide>0</self_collide>
+      <inertial>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+    </link>
+    <joint name='holding2' type='fixed'>
+      <pose frame=''>2.67 3.23 0 0 0 -0.7854</pose>
+      <child>marker</child>
+      <parent>marker_stand</parent>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <use_parent_model_frame>1</use_parent_model_frame>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+    </joint>
+
+    
+
+    <!-- MARKER 3 -->
+    <link name='marker_holder3'>
+      <pose frame=''>0.10 3.50 0 0 0 0</pose>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <bounce/>
+          <friction>
+            <torsional>
+              <ode/>
+            </torsional>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>MarkerHolder/Image</name>
+          </script>
+          <ambient>0.95 0.95 0.95 1</ambient>
+        </material>
+      </visual>
+      <self_collide>0</self_collide>
+      <inertial>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+    </link>
+    <link name='marker3'>
+      <pose frame=''>0.10 3.50 0 0 0 0</pose>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <slip1>0.5</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+          <bounce/>
+        </surface>
+        <max_contacts>10</max_contacts>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>Marker3/Image</name>
+          </script>
+          <ambient>0.95 0.95 0.95 1</ambient>
+        </material>
+      </visual>
+      <self_collide>0</self_collide>
+      <inertial>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+    </link>
+    <joint name='holding3' type='fixed'>
+      <pose frame=''>0.10 3.50 0 0 -0 0</pose>
+      <child>marker</child>
+      <parent>marker_stand</parent>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <use_parent_model_frame>1</use_parent_model_frame>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+    </joint>
+
+    <!-- MARKER 4 -->
+    <link name='marker_holder4'>
+      <pose frame=''>-3.08 1.95 0 0 0 1.57075</pose>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <bounce/>
+          <friction>
+            <torsional>
+              <ode/>
+            </torsional>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>MarkerHolder/Image</name>
+          </script>
+          <ambient>0.95 0.95 0.95 1</ambient>
+        </material>
+      </visual>
+      <self_collide>0</self_collide>
+      <inertial>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+    </link>
+    <link name='marker4'>
+      <pose frame=''>-3.08 1.95 0 0 0 1.57075</pose>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <slip1>0.5</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+          <bounce/>
+        </surface>
+        <max_contacts>10</max_contacts>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>Marker4/Image</name>
+          </script>
+          <ambient>0.95 0.95 0.95 1</ambient>
+        </material>
+      </visual>
+      <self_collide>0</self_collide>
+      <inertial>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+    </link>
+    <joint name='holding4' type='fixed'>
+      <pose frame=''>-3.08 1.95 0 0 0 1.57075</pose>
+      <child>marker</child>
+      <parent>marker_stand</parent>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <use_parent_model_frame>1</use_parent_model_frame>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+    </joint>
+
+    <!-- MARKER 5 -->
+    <link name='marker_holder5'>
+      <pose frame=''>-3.08 0 0 0 0 1.57075</pose>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <bounce/>
+          <friction>
+            <torsional>
+              <ode/>
+            </torsional>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>MarkerHolder/Image</name>
+          </script>
+          <ambient>0.95 0.95 0.95 1</ambient>
+        </material>
+      </visual>
+      <self_collide>0</self_collide>
+      <inertial>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+    </link>
+    <link name='marker5'>
+      <pose frame=''>-3.08 0 0 0 0 1.57075</pose>
+      <collision name='collision'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <slip1>0.5</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+          <bounce/>
+        </surface>
+        <max_contacts>10</max_contacts>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>Marker5/Image</name>
+          </script>
+          <ambient>0.95 0.95 0.95 1</ambient>
+        </material>
+      </visual>
+      <self_collide>0</self_collide>
+      <inertial>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+        <mass>1</mass>
+      </inertial>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+    </link>
+    <joint name='holding5' type='fixed'>
+      <pose frame=''>-3.08 0 0 0 0 1.57075</pose>
+      <child>marker</child>
+      <parent>marker_stand</parent>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <use_parent_model_frame>1</use_parent_model_frame>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+      </axis>
+    </joint>
+  </model>
+
+</sdf>

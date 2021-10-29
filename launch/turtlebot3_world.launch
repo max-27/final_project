@@ -1,0 +1,52 @@
+<launch>
+
+  <arg name="enable_robot" default="true"/>
+  <arg name="enable_competition" default="true"/>
+
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <arg name="x_pos" default="-2.0"/>
+  <arg name="y_pos" default="-0.5"/>
+  <arg name="z_pos" default="0.0"/>
+
+  <arg name="obstacle" default="$(find final_project)/urdf/obstacle.urdf"/>
+  <arg name="markers" default="$(find final_project)/urdf/markers.urdf"/>
+  <arg name="layout" default="0"/>
+
+   <arg name="headless" default="false"/>
+   <arg name="gui" default="true"/>
+
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find final_project)/worlds/final_project_world.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="$(arg headless)"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <group if="$(arg enable_robot)">
+
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find final_project)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+
+    <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf"  args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="30.0" />
+    </node>
+
+  </group>
+
+  <group if="$(arg enable_competition)">
+
+    <node pkg="final_project" type="spawn_barriers.py" name="spawn_barriers_urdf">
+      <param name="obstacle" value="$(arg obstacle)" />
+    </node>
+
+    <node pkg="final_project" type="spawn_markers.py" name="spawn_markers_urdf">
+      <param name="markers" value="$(arg markers)" />
+      <param name="layout" value="$(arg layout)" type="int" />
+    </node>
+  </group>
+
+</launch>

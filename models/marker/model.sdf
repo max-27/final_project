@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="Marker">
+    <pose>0 0 0.180 0 0 0</pose>
+    <static>false</static>
+    <link name="marker_holder">
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>MarkerHolder/Image</name>
+          </script>
+            <ambient>0.95 0.95 0.95 1</ambient>
+        </material>        
+      </visual>
+    </link>
+    <link name="marker">
+      <pose>0.0 0.0 0.0 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker_stand.dae</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <slip1>0.5</slip1>
+              <slip2>0</slip2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://marker/meshes/marker.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://marker/materials/scripts</uri>
+            <uri>file://marker/materials/textures</uri>
+            <name>Marker1/Image</name>
+          </script>
+            <ambient>0.95 0.95 0.95 1</ambient>
+        </material>     
+      </visual>
+    </link>
+    <joint type="fixed" name="holding">
+      <pose>0 0 0 0 0 0</pose>
+      <child>marker</child>
+      <parent>marker_stand</parent>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <use_parent_model_frame>true</use_parent_model_frame>
+      </axis>
+    </joint>
+  </model>
+</sdf>

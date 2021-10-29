@@ -1,0 +1,9 @@
+<launch>
+
+  <arg name="obstacle" default="$(find final_project)/urdf/obstacle.urdf"/>
+
+  <node pkg="final_project" type="spawn_barriers.py" name="spawn_barriers_urdf">
+    <param name="obstacle" value="$(arg obstacle)" />
+  </node>
+
+</launch>
