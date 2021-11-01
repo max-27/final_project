@@ -33,9 +33,11 @@ class Robot:
       self.driving_forward = True # we're done spinning, time to go forward!
 
     if self.driving_forward:
+      #print("drive forward")
       self.twist.linear.x = 0.4
       self.twist.angular.z = 0.0
     else:
+      #print("spin")
       self.twist.linear.x = 0.0
       self.twist.angular.z = 0.4
     self.cmd_vel_pub.publish(self.twist)

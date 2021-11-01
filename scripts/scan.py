@@ -18,13 +18,14 @@ def scan_qr_message_callback(msg):
 
 def scan():
 	# check if /visp_auto_tracker/object_position topic is published
-	scan_qr_pos = rospy.Subscriber('/visp_auto_tracker/object_position', PoseStamped, scan_qr_pos_callback)
-	scan_qr_msg = rospy.Subscriber('/visp_auto_tracker/code_message', String, scan_qr_message_callback)
+	rospy.Subscriber('/visp_auto_tracker/object_position', PoseStamped, scan_qr_pos_callback)
+	rospy.Subscriber('/visp_auto_tracker/code_message', String, scan_qr_message_callback)
 
 	next_qr_pos = rospy.wait_for_message("/visp_auto_tracker/object_position", PoseStamped)
 	qr_message = rospy.wait_for_message('/visp_auto_tracker/code_message', String)
 
 	if next_qr_pos is not None:
+		print(next_qr_pos)
 		position = next_qr_pos.pose.position
 		orientation = next_qr_pos.pose.orientation
 		pos_x, pos_y, pos_z = position.x, position.y, position.z
@@ -37,6 +38,6 @@ def scan():
 			num_qr = float(msg_list[4])
 			msg_qr = msg_list[5]
 			return [[curr_qr_pos, next_qr_pos, num_qr, msg_qr], [position, orientation]]
-		else:
-			return None
+	else:
+		return None
 	
