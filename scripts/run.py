@@ -23,7 +23,7 @@ robot = Robot()
 qr_code = False
 while not rospy.is_shutdown():
 	while qr_code is False:
-		robot.move()
+		robot.random_search()
 		scan_output = scan()
 		if  scan_output is not None:
 			print("Found QR Code")

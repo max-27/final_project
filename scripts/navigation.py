@@ -26,7 +26,7 @@ class Robot:
     self.g_range_ahead = min(tmp)
 
 
-  def move(self):
+  def random_search(self):
     if self.g_range_ahead < 0.8:
       self.driving_forward = False
     else: # we're not driving_forward
