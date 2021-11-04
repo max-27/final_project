@@ -49,12 +49,12 @@ while not rospy.is_shutdown():
 
 	#print(type(current_tf.transforms[0].child_frame_id))
 	if current_tf.transforms[0].header.frame_id == "map" and current_tf.transforms[0].child_frame_id == "odom":
-			print(current_tf.transforms[0].transform.translation)
-			print(current_tf.transforms[0].transform.rotation)
+			#print(current_tf.transforms[0].transform.translation)
+			#print(current_tf.transforms[0].transform.rotation)
 			rotation_quat = current_tf.transforms[0].transform.rotation
-			print(rotation_quat)
+			rotation_quat = [rotation_quat.x, rotation_quat.y, rotation_quat.z, rotation_quat.w]
 			rotation_euler = euler_from_quaternion(rotation_quat)
-			#print(rotation_euler)
+			print(rotation_euler)
 			break
 	
 
