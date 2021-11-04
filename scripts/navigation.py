@@ -13,7 +13,7 @@ class Robot:
     self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
     self.driving_forward = True
     self.twist = Twist()
-    rospy.init_node('navigation')
+    #rospy.init_node('navigation')
 
 
   def scan_callback(self, msg):
