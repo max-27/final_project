@@ -9,6 +9,7 @@ from navigation import Robot
 from scan import Scan
 from transformations import Transformations
 
+
 import tf
 from tf.transformations import euler_from_quaternion
 
@@ -36,17 +37,22 @@ while not rospy.is_shutdown():
 			position, orientation = obj_info
 			robot.stop()
 			qr_code = True
+ 	
 
 	tf_matrix_map_odom = trans.get_tf_transformation("map", "odom")
-	print(1)
+	goal = np.zeros((4,1))
+	goal[0] = next_qr_pos[0]
+	goal[1] = next_qr_pos[1]
+	goal[2] = 0
+	goal[3] = 1
+	goal = np.matmul(tf_matrix_map_odom, goal)
 	tf_matrix_odom_bfoot = trans.get_tf_transformation("odom", "base_footprint")
-	print(2)
-	tf_matrix_bfoot_blink = trans.get_tf_static_transformation("base_footprint", "base_link")
+	#tf_matrix_bfoot_blink = trans.get_tf_static_transformation("base_footprint", "base_link")
 	#tf_matrix_cam_camo = trans.get_tf_static_transformation("camera_link", "camera_optical_link")
-	print(3)
-	tf_matrix_imu_cam = trans.get_tf_static_transformation("imu_link", "camera_link")
-	tf_matrix_blink_imu = trans.get_tf_static_transformation("base_link", "imu_link")
-	
+	#tf_matrix_imu_cam = trans.get_tf_static_transformation("imu_link", "camera_link")
+	#tf_matrix_blink_imu = trans.get_tf_static_transformation("base_link", "imu_link")
+
+	robot.move_to_goal(goal)
 
 	break
 	## transformations in tf_static:
