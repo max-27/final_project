@@ -1,35 +1,25 @@
 #!/usr/bin/env python
 # BEGIN ALL
 import rospy
+import numpy as np
 from gazebo_msgs.msg import ModelStates
 from tf2_msgs.msg import TFMessage
 
 from navigation import Robot
 from scan import Scan
+from transformations import Transformations
+
+import tf
 from tf.transformations import euler_from_quaternion
 
-
-currentModelState = ModelStates() 
-
-# Definition of callback functions
-
-def ModelStateCallback(msg):
-  global currentModelState
-  currentModelState = msg
-
-def TFCallback(msg):
-	global current_tf
-	current_tf = msg
-
-final_dict = {}
-pose = rospy.Subscriber('/gazebo/model_states', ModelStates, ModelStateCallback)
-
-tf = rospy.Subscriber('/tf', TFMessage, TFCallback)
 
 rospy.init_node('robot')
 
 robot = Robot()
 scan = Scan()
+trans = Transformations()
+
+final_dict = {}
 qr_code = False
 next_qr_pos = None
 scan_output = None
@@ -47,17 +37,31 @@ while not rospy.is_shutdown():
 			robot.stop()
 			qr_code = True
 
-	#print(type(current_tf.transforms[0].child_frame_id))
-	if current_tf.transforms[0].header.frame_id == "map" and current_tf.transforms[0].child_frame_id == "odom":
-			#print(current_tf.transforms[0].transform.translation)
-			#print(current_tf.transforms[0].transform.rotation)
-			rotation_quat = current_tf.transforms[0].transform.rotation
-			rotation_quat = [rotation_quat.x, rotation_quat.y, rotation_quat.z, rotation_quat.w]
-			rotation_euler = euler_from_quaternion(rotation_quat)
-			print(rotation_euler)
-			break
+	tf_matrix_map_odom = trans.get_tf_transformation("map", "odom")
+	print(1)
+	tf_matrix_odom_bfoot = trans.get_tf_transformation("odom", "base_footprint")
+	print(2)
+	tf_matrix_bfoot_blink = trans.get_tf_static_transformation("base_footprint", "base_link")
+	#tf_matrix_cam_camo = trans.get_tf_static_transformation("camera_link", "camera_optical_link")
+	print(3)
+	tf_matrix_imu_cam = trans.get_tf_static_transformation("imu_link", "camera_link")
+	tf_matrix_blink_imu = trans.get_tf_static_transformation("base_link", "imu_link")
 	
 
+	break
+	## transformations in tf_static:
+	# base_footprint -> base_link
+	# imu_link -> camera_link
+	# camera_link -> camera_optical_link
+	# base_link -> caster_back_link
+	# base_link -> imu_link
+	# base_link -> base_scan
+
+	## transformation in tf:
+	# map -> odom
+	# odom -> base_footprint
+
+	# TO-DO:
 	# find transformation matrix for robot frame and map frame
 	# calculate new goal for robot with next_qr_pos
 	# implement motion planning for new goal

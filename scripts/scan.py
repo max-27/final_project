@@ -16,7 +16,6 @@ class Scan:
 	def _scan_qr_pos_callback(self, msg):
 		self.object_position = msg.pose
 
-
 	def _scan_qr_message_callback(self, msg):
 		# message looks like this:
 		# <data: "X=2.67\r\nY=3.23\r\nX_next=0.1\r\nY_next=3.5\r\nN=2\r\nL=M">
@@ -25,7 +24,7 @@ class Scan:
 	def scan(self):
 		#next_qr_pos = rospy.wait_for_message("/visp_auto_tracker/object_position", PoseStamped)
 		#qr_message = rospy.wait_for_message('/visp_auto_tracker/code_message', String)
-		if self.object_position is not None:
+		if self.object_position is not None and self.code_message is not None:
 			position = self.object_position.position
 			orientation = self.object_position.orientation
 			pos_x, pos_y, pos_z = position.x, position.y, position.z
