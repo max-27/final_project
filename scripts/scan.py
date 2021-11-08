@@ -10,6 +10,8 @@ class Scan:
 	def __init__(self):
 		self.object_position = None
 		self.code_message = None
+		self.qr_dict = {}
+		self.num_qr = None
 		rospy.Subscriber('/visp_auto_tracker/object_position', PoseStamped, self._scan_qr_pos_callback)
 		rospy.Subscriber('/visp_auto_tracker/code_message', String, self._scan_qr_message_callback)
 
@@ -34,9 +36,16 @@ class Scan:
 					msg_list = [i.rsplit("=",1)[1] for i in self.code_message.split("\r\n")]
 					curr_qr_pos = [float(msg_list[0]), float(msg_list[1])]
 					next_qr_pos = [float(msg_list[2]), float(msg_list[3])]
-					num_qr = float(msg_list[4])
+					self.num_qr = float(msg_list[4])
 					msg_qr = msg_list[5]
-					return [[curr_qr_pos, next_qr_pos, num_qr, msg_qr], [position, orientation]]
+					return [[curr_qr_pos, next_qr_pos, self.num_qr, msg_qr], [position, orientation]]
 			else:
 				return None
+
+	def validate_scan(self):
+		if self.num_qr not in self.qr_dict.keys():
+			self.qr_dict[self.num_qr] = True
+			return True
+		else:
+			return False 
 	
