@@ -47,12 +47,12 @@ class Robot:
 
     if self.driving_forward:
       #print("drive forward")
-      self.twist.linear.x = 0.4
+      self.twist.linear.x = 0.1
       self.twist.angular.z = 0.0
     else:
       #print("spin")
       self.twist.linear.x = 0.0
-      self.twist.angular.z = 0.4
+      self.twist.angular.z = 0.1
     self.cmd_vel_pub.publish(self.twist)
 
   def move_to_goal(self, goal_robot, frame_id):
@@ -67,7 +67,7 @@ class Robot:
     print("Published goal")
 
   def stop(self):
-    print("Stop robot")
+    #print("Stop robot")
     self.twist.linear.x = 0.
     self.twist.linear.y = 0.
     self.twist.angular.z = 0.

@@ -55,9 +55,9 @@ d = [] #list for accessing specific qr
 
 while not rospy.is_shutdown():   
     if code is not '':
+
         try:
             (trans1,rot1) = listener.lookupTransform('/map', '/qr_frame', rospy.Time.now())
-            print(trans1, rot1)
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             continue
 
