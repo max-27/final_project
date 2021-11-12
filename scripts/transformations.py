@@ -74,6 +74,8 @@ class Transformation:
 				print('New QR detected: ' + qr_name)
 
 	def get_hidden_frame(self):
+
+
 		if len(self.trs) == 2:  # if you detect two qr codes
 			# name = trs.keys() #list of keys for the dictionary
 			qr1_coords_world = self.trs[self.d[0]][0]

@@ -2,6 +2,7 @@
 # BEGIN ALL
 import rospy
 import numpy as np
+import pdb
 
 from navigation import Robot
 from scan import Scan
@@ -12,6 +13,7 @@ rospy.init_node('robot')
 robot = Robot()
 scan = Scan()
 trans = Transformation()
+<<<<<<< HEAD
 scan_output = None
 setting_new_goal = False
 dict_global_qr_codes = {}
@@ -42,7 +44,8 @@ while not rospy.is_shutdown():
 	#	robot.move_to_goal(scan_output[0][1], "qr_coordinate_frame")
 	#	#rans.get_qr_code()
 	#	#success = trans.get_hidden_frame()
-		
+	
+
 
 
 
