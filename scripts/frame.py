@@ -125,7 +125,7 @@ while not rospy.is_shutdown():
                      "qr_coordinate_frame",
                      "map")
 
-        print('Hooray Bitches')
+        print(final_theta)
         #import pdb; pdb.set_trace()
 
 rospy.spin()

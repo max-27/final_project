@@ -60,4 +60,7 @@
     <arg name="model" value="$(arg model)" />
   </include>
 
+  <include file="$(find final_project)/launch/qr_visp.launch">
+  </include>
+
 </launch>
