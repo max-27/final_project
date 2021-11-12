@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="234679b6-da7f-407d-889e-867620c7d7d7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/final_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/final_project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launch/turtlebot3_world.launch" beforeDir="false" afterPath="$PROJECT_DIR$/launch/turtlebot3_world.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/frame.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/frame.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/navigation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/navigation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/transformations.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/transformations.py" afterDir="false" />
     </list>
@@ -40,7 +36,7 @@
       <workItem from="1636660937213" duration="4000" />
       <workItem from="1636661525128" duration="3360000" />
       <workItem from="1636676650360" duration="6114000" />
-      <workItem from="1636702472125" duration="982000" />
+      <workItem from="1636702472125" duration="3218000" />
     </task>
     <servers />
   </component>
