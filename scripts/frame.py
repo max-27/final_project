@@ -7,15 +7,17 @@ import tf
 import time
 import math
 import geometry_msgs.msg
- 
+from message_filters import Subscriber, ApproximateTimeSynchronizer
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
- 
+
+br = tf.TransformBroadcaster()
+
 #Create callback. This is what happens when a new message is received
 def obj_cal(msg):
     global pose #to use it outside the callback
     pose = msg.pose
-    br = tf.TransformBroadcaster() #publish/create frame using pose info
+     #publish/create frame using pose info
     # send out the pose of the turtle in the form of a transform
     br.sendTransform([pose.position.x, pose.position.y, pose.position.z],
                      [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w],
@@ -38,12 +40,10 @@ def code_cal(msg):
 
 # Initialize node
 rospy.init_node('obj_pose')
- 
-#Initialize publisher
-rospy.Subscriber('visp_auto_tracker/code_message', String , code_cal)
- 
-#Initialize publisher
-rospy.Subscriber('visp_auto_tracker/object_position', PoseStamped, obj_cal)
+
+code_sub = rospy.Subscriber('visp_auto_tracker/code_message', String, code_cal)
+obj_sub = rospy.Subscriber('visp_auto_tracker/object_position', PoseStamped, obj_cal)
+
 
 listener = tf.TransformListener()   #to get translation & rotations between the frames
 pr = tf.TransformBroadcaster() #to publish new frames
@@ -55,12 +55,10 @@ d = [] #list for accessing specific qr
 
 while not rospy.is_shutdown():   
     if code is not '':
-
         try:
-            (trans1,rot1) = listener.lookupTransform('/map', '/qr_frame', rospy.Time.now())
+            (trans1, rot1) = listener.lookupTransform('/map', '/qr_frame', rospy.Time.now())
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             continue
-
         #Use qr_code to map frame translations
         pr.sendTransform(trans1,
                      [0.0, 0.0, 0.0, 1.0],
@@ -100,10 +98,12 @@ while not rospy.is_shutdown():
         theta_qr = math.acos(qr_y / distance_qr) #Angle of rotation
         if qr_x < 0.0: theta_qr = 2*math.pi - theta_qr
 
-        final_theta = theta_qr - theta_w #rotation between qr codes frame and map frame 
 
+
+        final_theta = theta_qr - theta_w #rotation between qr codes frame and map frame
+        #final_theta = 1.57
         # to get zero rotation wrt qr codes frame
-        pr.sendTransform([0.0, 0.0, 0.0],tf.transformations.quaternion_from_euler(0.0, 0.0, final_theta),
+        pr.sendTransform([0.0, 0.0, 0.0], tf.transformations.quaternion_from_euler(0.0, 0.0, final_theta),
                      rospy.Time.now(),
                      "rr_frame",
                      "tr_frame")
@@ -125,7 +125,7 @@ while not rospy.is_shutdown():
                      "qr_coordinate_frame",
                      "map")
 
-        print(final_theta)
+        #print(final_theta)
         #import pdb; pdb.set_trace()
 
 rospy.spin()

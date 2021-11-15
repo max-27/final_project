@@ -55,7 +55,9 @@ class Robot:
       self.twist.angular.z = 0.1
     self.cmd_vel_pub.publish(self.twist)
 
-  def move_to_goal(self, goal_robot, frame_id):
+  def move_to_goal(self, goal_robot, frame_id, id):
+    self.goal.goal_id.id = id
+    #self.goal.goal_id.stamp =
     self.goal.goal.target_pose.header.frame_id = frame_id
     self.goal.goal.target_pose.pose.position.x = goal_robot[0]
     self.goal.goal.target_pose.pose.position.y = goal_robot[1]
@@ -64,7 +66,6 @@ class Robot:
     self.goal.goal.target_pose.pose.orientation.z = 0.321544014734
     self.goal.goal.target_pose.pose.orientation.w = 0.324784465306
     self.goal_pub.publish(self.goal)
-    print("Published goal")
 
   def stop(self):
     #print("Stop robot")

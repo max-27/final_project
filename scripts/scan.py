@@ -47,7 +47,8 @@ class Scan:
 						print(self.qr_dict)
 						return [[curr_qr_pos, next_qr_pos, self.num_qr, msg_qr], [position, orientation]]
 					else:
-						print('QR code already scaned.')
+						#print('QR code already scaned.')
+						pass
 			
 			else:
 				print('Scan is None')
