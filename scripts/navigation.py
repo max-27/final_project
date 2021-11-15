@@ -2,6 +2,7 @@
 # BEGIN ALL
 import rospy
 import tf
+import time
 from tf.transformations import euler_from_quaternion
 from geometry_msgs.msg import Twist, PoseWithCovarianceStamped
 from sensor_msgs.msg import LaserScan
@@ -24,6 +25,7 @@ class Robot:
     self.listener = tf.TransformListener()
     self.rate = rospy.Rate(1.0)
     #rospy.init_node('navigation')
+    time.sleep(2) #needs time to properly subscribe. 
 
   def scan_callback(self, msg):
     #global g_range_ahead
@@ -36,8 +38,10 @@ class Robot:
 
   def amcl_callback(self, msg):
     robot_pos = msg.pose.pose.position
+    robot_ori = msg.pose.pose.orientation
     self.robot_position = [robot_pos.x, robot_pos.y, robot_pos.z]
-    self.robot_orientation = msg.pose.pose.orientation
+    self.robot_orientation = robot_ori.z
+    print("pose updated")
 
   def random_search(self):
     if self.g_range_ahead < 0.8:
@@ -66,11 +70,45 @@ class Robot:
     self.goal_pub.publish(self.goal)
     print("Published goal")
 
+  def focused_search(self):
+    x=5
+    y=2
+    
+    if self.robot_orientation > 0.68 and self.robot_orientation < 0.72:
+      self.stop()
+      print("Orientation reached")
+    else:
+      self.turn()
+    
+    if self.robot_position[1] >y:
+      self.stop()
+      print("Border reached")
+    else:
+      if self.g_range_ahead < 0.5:
+        self.stop()
+        self.turn()
+      else:
+        self.straight()
+      
+
+
   def stop(self):
     print("Stop robot")
     self.twist.linear.x = 0.
     self.twist.linear.y = 0.
     self.twist.angular.z = 0.
+    self.cmd_vel_pub.publish(self.twist)
+
+  def turn(self):
+    #self.twist.linear.x = 0.
+    #self.twist.linear.y = 0.
+    self.twist.angular.z = 0.2
+    self.cmd_vel_pub.publish(self.twist)
+  
+  def straight(self):   
+    self.twist.linear.x = 0.2
+    #self.twist.linear.y = 0.
+    #self.twist.angular.z = 0.
     self.cmd_vel_pub.publish(self.twist)
 
   def get_current_position(self):

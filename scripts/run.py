@@ -29,8 +29,9 @@ qr_pos_hidden_dict = {}
 obj_info_dict = {}
 random = True
 while not rospy.is_shutdown():
+
 	while random is True:
-		robot.random_search()
+		robot.focused_search()
 		scan_output = scan.scan()
 		scan_val = scan.validate_scan()
 		if scan_output is not None and scan_val == True:
