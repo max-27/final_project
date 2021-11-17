@@ -4,7 +4,6 @@
     <list default="true" id="234679b6-da7f-407d-889e-867620c7d7d7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/transformations.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/transformations.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
