@@ -52,7 +52,7 @@ class Robot:
     else:
       #print("spin")
       self.twist.linear.x = 0.0
-      self.twist.angular.z = 0.1
+      self.twist.angular.z = 0.05
     self.cmd_vel_pub.publish(self.twist)
 
   def move_to_goal(self, goal_robot, frame_id, id):
@@ -66,6 +66,10 @@ class Robot:
     self.goal.goal.target_pose.pose.orientation.z = 0.321544014734
     self.goal.goal.target_pose.pose.orientation.w = 0.324784465306
     self.goal_pub.publish(self.goal)
+
+  def move_forward(self):
+    self.twist.linear.x = 0.02
+    self.cmd_vel_pub.publish(self.twist)
 
   def stop(self):
     #print("Stop robot")

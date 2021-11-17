@@ -45,14 +45,18 @@ while not rospy.is_shutdown():
 
             if scan_output is not None:
                 robot.stop()
-                rospy.sleep(10.)
+                rospy.sleep(5.)
+                now = trans.get_qr_code()
+                rospy.sleep(5.)
                 # return of scan.scan [[curr_qr_pos, next_qr_pos, self.num_qr, msg_qr], [position, orientation]]
                 current_qr_numb = scan_output[0][2]
                 current_qr_locat = scan_output[0][0]
                 next_qr_locat = scan_output[0][1]
-                listener.waitForTransform('/map', 'qr_frame', rospy.Time.now(), rospy.Duration(4.0))
+                print(now)
+                print(type(now))
+                listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
                 try:
-                    now = rospy.Time.now()
+                    #now = rospy.Time.now()
                     listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
                     (trans1, rot1) = listener.lookupTransform('/map', '/qr_frame', now)
                     print(trans1)
@@ -71,6 +75,7 @@ while not rospy.is_shutdown():
     goal_set = False
     # Focused search
     list_key = dict_global_qr_codes.keys()
+    print(list_key[i])
     i = 0
     while bool_random_search is False and goal_set is False:
         trans, delta = dict_global_qr_codes[list_key[i]]

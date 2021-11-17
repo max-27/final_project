@@ -51,7 +51,6 @@ class Scan:
 						pass
 			
 			else:
-				print('Scan is None')
 				return None
 
 	#def validate_scan(self):
