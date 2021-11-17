@@ -52,8 +52,6 @@ while not rospy.is_shutdown():
                 current_qr_numb = scan_output[0][2]
                 current_qr_locat = scan_output[0][0]
                 next_qr_locat = scan_output[0][1]
-                print(now)
-                print(type(now))
                 listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
                 try:
                     #now = rospy.Time.now()
@@ -71,11 +69,10 @@ while not rospy.is_shutdown():
             print('Two QR codes found.')
             bool_random_search = False
             break
-
+    trans.get_hidden_frame(now)
     goal_set = False
     # Focused search
     list_key = dict_global_qr_codes.keys()
-    print(list_key[i])
     i = 0
     while bool_random_search is False and goal_set is False:
         trans, delta = dict_global_qr_codes[list_key[i]]
