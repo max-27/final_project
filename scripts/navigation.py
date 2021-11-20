@@ -7,6 +7,7 @@ from geometry_msgs.msg import Twist, PoseWithCovarianceStamped
 from sensor_msgs.msg import LaserScan
 from gazebo_msgs.msg import ModelStates
 from move_base_msgs.msg import MoveBaseActionGoal
+from actionlib_msgs.msg import GoalID
 
 
 class Robot:
@@ -17,9 +18,11 @@ class Robot:
         self.m_states_sub = rospy.Subscriber('amcl_pose', PoseWithCovarianceStamped, self.amcl_callback)
         self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         self.goal_pub = rospy.Publisher('move_base/goal', MoveBaseActionGoal, queue_size=1)
+        self.cancel_pub = rospy.Publisher('move_base/cancel', GoalID, queue_size=1)
         self.driving_forward = True
         self.twist = Twist()
         self.goal = MoveBaseActionGoal()
+        self.cancel_msg = GoalID()
         self.listener = tf.TransformListener()
         self.rate = rospy.Rate(1.0)
         # rospy.init_node('navigation')
@@ -65,6 +68,10 @@ class Robot:
         self.goal.goal.target_pose.pose.orientation.w = 0.324784465306
         self.goal_pub.publish(self.goal)
 
+    def cancel_goal(self, goal_id):
+        self.cancel_msg.id = goal_id
+        self.cancel_pub.publish(self.cancel_msg)
+
     def move_forward(self):
         self.twist.linear.x = 0.02
         self.cmd_vel_pub.publish(self.twist)
@@ -72,6 +79,7 @@ class Robot:
     def spin_360(self, spinning_speed=0.05):
         self.twist.angular.z = spinning_speed
         self.cmd_vel_pub.publish(self.twist)
+        print("Published spinning")
 
     def stop(self):
         # print("Stop robot")

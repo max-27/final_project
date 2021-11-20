@@ -74,7 +74,6 @@ class Transformation:
 									 float(self.sec[3][1]),
 									 float(self.sec[4][1]), self.sec[5][1]]
 				self.d.append(qr_name)
-			print('New QR detected: ' + qr_name)
 			return now
 
 	def get_hidden_frame(self, timestamp):
