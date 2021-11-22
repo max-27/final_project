@@ -58,24 +58,30 @@ while not rospy.is_shutdown():
                 # now_sec = now_out.to_sec()
                 # now = rospy.Time(now_sec)
                 rospy.sleep(5.)
-                # return of scan.scan [[curr_qr_pos, next_qr_pos, self.num_qr, msg_qr], [position, orientation]]
                 current_qr_numb = scan_output[0][2]
                 current_qr_locat = scan_output[0][0]
                 next_qr_locat = scan_output[0][1]
-                listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
                 try:
                     listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
-                    (trans1, rot1) = listener.lookupTransform('/map', '/qr_frame', now)
-                    delta_qr = np.array(next_qr_locat) - np.array(current_qr_locat)
-                    rot_euler = tf.transformations.euler_from_quaternion(rot1)
-                except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
+                    try:
+                        listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
+                        (trans1, rot1) = listener.lookupTransform('/map', '/qr_frame', now)
+                        delta_qr = np.array(next_qr_locat) - np.array(current_qr_locat)
+                        rot_euler = tf.transformations.euler_from_quaternion(rot1)
+                    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
+                        print(e)
+                    if current_qr_numb == 5:
+                        next_qr_numb = 1
+                    else:
+                        next_qr_numb = current_qr_numb + 1
+                    dict_global_qr_codes[current_qr_numb] = [[trans1, delta_qr], next_qr_numb]
+                    rospy.sleep(3.)
+                except TypeError as e:
                     print(e)
-                if current_qr_numb == 5:
-                    next_qr_numb = 1
-                else:
-                    next_qr_numb = current_qr_numb + 1
-                dict_global_qr_codes[current_qr_numb] = [[trans1, delta_qr], next_qr_numb]
-                rospy.sleep(3.)
+                    # delete latest qr scan after failed transform listening
+                    del scan.qr_dict[scan.num_qr]
+                    print(scan.qr_dict)
+                    print("Continue random search...")
         else:
             robot.stop()
             print('Two QR codes found.')
@@ -114,7 +120,7 @@ while not rospy.is_shutdown():
                     start_time = time.time()
                     end_time = 0
                     while (scan_output is None) and (
-                            end_time - start_time < time_threshold * 4):  # TODO how to get time for one spin?
+                            end_time - start_time < time_threshold * 5):  # TODO how to get time for one spin?
                         scan_output = scan.scan(search_id=qr_id, specific_search=True)
                         if scan_output is not None and int(scan_output[0][2]) == int(id_.split("/")[0]):
                             break
@@ -197,9 +203,12 @@ while not rospy.is_shutdown():
         goal_qr_id = int(dict_global_qr_codes[read_qr_codes[qr_goal_index]][1])
         print("New goal: QR Code: {}".format(goal_qr_id))
         trans, delta = dict_global_qr_codes[read_qr_codes[qr_goal_index]][0]
+        print("Translation: {}".format(trans))
+        print("Delta: {}".format(delta))
         goal = np.array(trans) + np.array([-delta[1], delta[0], 0])
+        print("Goal without offset: {}".format(goal))
         goal[2] = 0  # set z value to ground floor
-        offset = 1.2
+        offset = 1.1
         x_goal = goal[0]
         y_goal = goal[1]
         if x_goal < 0 and y_goal < 0:  # third quadrant of map frame

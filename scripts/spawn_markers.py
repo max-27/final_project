@@ -28,7 +28,7 @@ if __name__ == '__main__':
     layout = rospy.get_param('~layout') - 1 # align for list index, -> 0 for random layout
     rospy.loginfo("The Layout is {}".format(layout))
 
-
+    layout = 3
     if layout == -1:
         layout = random.randint(0,len(marker_poses))
 
