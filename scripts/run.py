@@ -31,12 +31,12 @@ random = True
 while not rospy.is_shutdown():
 
 	while random is True:
-		robot.focused_search()
+		robot.focused_search2()
 		scan_output = scan.scan()
 		scan_val = scan.validate_scan()
 		if scan_output is not None and scan_val == True:
 			robot_pos = robot.get_current_position()
-			robot.stop()
+			robot.stop2()
 			qr_info, obj_info = scan_output
 			print("Found QR Code")
 			curr_qr_pos, next_qr_pos, num_qr, msg_qr = qr_info

@@ -1,0 +1,39 @@
+self.checkpoint = 0
+self.nextCheckPoint = [1,0.5]
+self.running = False
+
+def focused_search2(self):
+    
+    if self.status_id == 4:
+      print("Goal not reachable, going to next one")
+      self.checkpoint = self.checkpoint +1
+
+    elif self.status_id == 3:
+      print("checkpoint reached")
+      self.checkpoint = self.checkpoint + 1
+      #self.stop2()
+      self.running = False
+      if self.checkpoint == 1:
+        self.nextCheckPoint[1] = -1*self.nextCheckPoint[1]
+      elif self.checkpoint == 2:
+        self.nextCheckPoint[0] = -1*self.nextCheckPoint[0]
+      elif self.checkpoint == 3:
+        self.nextCheckPoint[1] = -1*self.nextCheckPoint[1]
+      elif self.checkpoint == 4:
+        print("Expanding search")
+        self.nextCheckPoint[0] = self.nextCheckPoint[0] + 1
+        self.nextCheckPoint[1] = self.nextCheckPoint[1] + 0.5
+      else:
+        print("Search failed, starting over")
+        self.checkpoint = 1
+        self.nextCheckPoint[0] = 1
+        self.nextCheckPoint[1] = 0.5
+        self.moveResult = "Nothing"
+
+    elif self.running == False:
+      self.move_to_goal(self.nextCheckPoint, "map",self.checkpoint)
+      self.running = True
+
+    else:
+      print("Running")
+      time.sleep(2) #to not flood the terminal
