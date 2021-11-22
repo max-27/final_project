@@ -54,9 +54,9 @@ while not rospy.is_shutdown():
                 robot.stop()
                 rospy.sleep(5.)
                 # avoiding error TypeError: time must have a to_sec method, e.g. rospy.Time or rospy.Duration
-                now_out = transform.get_qr_code()
-                now_sec = now_out.to_sec()
-                now = rospy.Time(now_sec)
+                now = transform.get_qr_code()
+                # now_sec = now_out.to_sec()
+                # now = rospy.Time(now_sec)
                 rospy.sleep(5.)
                 # return of scan.scan [[curr_qr_pos, next_qr_pos, self.num_qr, msg_qr], [position, orientation]]
                 current_qr_numb = scan_output[0][2]
@@ -134,9 +134,9 @@ while not rospy.is_shutdown():
                         return False, None
 
     def get_infos(s_output):
-        now_out = transform.get_qr_code()
-        now_sec = now_out.to_sec()
-        now_ = rospy.Time(now_sec)
+        now_ = transform.get_qr_code()
+        #now_sec = now_out.to_sec()
+        #now_ = rospy.Time(now_sec)
         rospy.sleep(5.)
         # return of scan.scan [[curr_qr_pos, next_qr_pos, self.num_qr, msg_qr], [position, orientation]]
         current_qr_numb_ = s_output[0][2]

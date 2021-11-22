@@ -54,7 +54,7 @@ class Robot:
         else:
             # print("spin")
             self.twist.linear.x = 0.0
-            self.twist.angular.z = 0.05
+            self.twist.angular.z = 0.12
         self.cmd_vel_pub.publish(self.twist)
 
     def move_to_goal(self, goal_robot, frame_id, id_):
