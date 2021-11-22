@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="234679b6-da7f-407d-889e-867620c7d7d7" name="Changes" comment="">
+    <list default="true" id="7d928eaf-4ded-477f-a0e4-7bf981ba0c89" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/run_refactor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/final_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/final_project.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/spawn_markers.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/spawn_markers.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +25,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="20ms0mCzRINI94mooWEoCQL6cIk" />
+  <component name="ProjectId" id="21HFDeAl0IiHSlvBNBQIgtm0yEH" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -30,30 +34,33 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="234679b6-da7f-407d-889e-867620c7d7d7" name="Changes" comment="" />
-      <created>1636660880583</created>
+      <changelist id="7d928eaf-4ded-477f-a0e4-7bf981ba0c89" name="Changes" comment="" />
+      <created>1637589989594</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1636660880583</updated>
-      <workItem from="1636660937213" duration="4000" />
-      <workItem from="1636661525128" duration="3360000" />
-      <workItem from="1636676650360" duration="6114000" />
-      <workItem from="1636702472125" duration="3218000" />
-      <workItem from="1636981537030" duration="87000" />
-      <workItem from="1636982096542" duration="18965000" />
-      <workItem from="1637306716350" duration="4589000" />
-      <workItem from="1637311882769" duration="21151000" />
-      <workItem from="1637405551326" duration="11936000" />
-      <workItem from="1637582914118" duration="5463000" />
+      <updated>1637589989594</updated>
+      <workItem from="1637589994868" duration="2194000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

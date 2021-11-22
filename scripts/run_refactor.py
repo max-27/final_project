@@ -10,19 +10,17 @@ from navigation import Robot
 from scan import Scan
 from transformations import Transformation
 from actionlib_msgs.msg import GoalStatusArray
+import settings
 
-rospy.init_node('robot')
 
 robot = Robot()
 scan = Scan()
 transform = Transformation()
-
-bool_random_search = True
+random_search = True
 scan_output = None
 setting_target_goal = False
 dict_global_qr_codes = {}
 dict_hidden_qr_codes = {}
-
 listener = tf.TransformListener()
 
 
@@ -37,7 +35,7 @@ def callback_status(msg):
 def shutdown_hook():
     print("Shutdown rospy...")
 
-
+rospy.init_node('robot')
 rospy.Subscriber("move_base/status", GoalStatusArray, callback_status)
 i = 0
 while not rospy.is_shutdown():
@@ -45,18 +43,14 @@ while not rospy.is_shutdown():
     #################################################################
     ## Start-phase: Robot should find two QR codes with random search
     #################################################################
-    while bool_random_search is True:
+    while random_search is True:
         if len(dict_global_qr_codes) < 2:
             robot.random_search()
             scan_output = scan.scan()
-
             if scan_output is not None:
                 robot.stop()
                 rospy.sleep(5.)
-                # avoiding error TypeError: time must have a to_sec method, e.g. rospy.Time or rospy.Duration
                 now = transform.get_qr_code()
-                # now_sec = now_out.to_sec()
-                # now = rospy.Time(now_sec)
                 rospy.sleep(5.)
                 current_qr_numb = scan_output[0][2]
                 current_qr_locat = scan_output[0][0]
@@ -77,6 +71,7 @@ while not rospy.is_shutdown():
                     dict_global_qr_codes[current_qr_numb] = [[trans1, delta_qr], next_qr_numb]
                     rospy.sleep(3.)
                 except TypeError as e:
+                    # avoiding error TypeError: time must have a to_sec method, e.g. rospy.Time or rospy.Duration
                     print("Found QR Code but transform listener failed...")
                     # delete latest qr scan after failed transform listening
                     del scan.qr_dict[scan.num_qr]
@@ -85,7 +80,7 @@ while not rospy.is_shutdown():
         else:
             robot.stop()
             print('Two QR codes found.')
-            bool_random_search = False
+            random_search = False
             break
 
 
@@ -141,8 +136,6 @@ while not rospy.is_shutdown():
 
     def get_infos(s_output):
         now_ = transform.get_qr_code()
-        #now_sec = now_out.to_sec()
-        #now_ = rospy.Time(now_sec)
         rospy.sleep(5.)
         # return of scan.scan [[curr_qr_pos, next_qr_pos, self.num_qr, msg_qr], [position, orientation]]
         current_qr_numb_ = s_output[0][2]
@@ -163,23 +156,29 @@ while not rospy.is_shutdown():
         dict_global_qr_codes[current_qr_numb_] = [[trans1_, delta_qr_], next_qr_numb_]
         rospy.sleep(3.)
 
-    def goal_runner(goals_list_, goal_qr_id_, offset=1.2):
+    def goal_runner(goal_, goal_qr_id_):
+        x_goal = goal_[0]
+        y_goal = goal_[1]
         success_ = False
         try_counter = 0
-        while success_ is False and try_counter < 4:
+        while success_ is False and try_counter < len(settings.OFFSETS):
+            print("Run goal approach with offset option {}".format(try_counter))
+            x = [x_goal + settings.OFFSETS[try_counter], x_goal - settings.OFFSETS[try_counter]]
+            y = [y_goal + settings.OFFSETS[try_counter], y_goal - settings.OFFSETS[try_counter]]
+            goals_list_ = [[x_goal, y[0]], [x_goal, y[1]], [x[0], y_goal], [x[1], y_goal]]
             for num_tries_, curr_goal_ in enumerate(goals_list_):
                 if success_ is False:
                     print("Set goal with offset option number {}".format(num_tries_ + 1))
                     success_, scan_output_ = run_to_goal(curr_goal_, str(goal_qr_id_) + "/" + str(try_counter) + str(num_tries_ + 1))
-                elif success_:
+                if success_:
                     print("##############")
                     print("SUCCESS")
                     print("##############")
                     get_infos(scan_output_)
                     return True
-            print("COULD NOT REACH QR CODE NUMBER {}".format(goal_qr_id_))
+            print("Could not reach qr code {} with current offset settings".format(goal_qr_id_))
             try_counter += 1
-            offset -= .1
+        print("NOT ABLE TO REACH QR CODE {}!".format(goal_qr_id_))
         return False
 
     #################################################################
@@ -189,10 +188,10 @@ while not rospy.is_shutdown():
     goal_set = False
     # Focused search
     qr_goal_index = 0
-    print("\n####################")
-    print("start focused search")
-    print("####################")
-    while bool_random_search is False and goal_set is False:
+    print("\n#############################################################")
+    print("#################### start focused search ####################")
+    print("##############################################################")
+    while random_search is False and goal_set is False:
         # check if current qr goal already read
         qr_goal_index = 0
         read_qr_codes = dict_global_qr_codes.keys()
@@ -202,44 +201,16 @@ while not rospy.is_shutdown():
                 qr_goal_index = 0
         goal_qr_id = int(dict_global_qr_codes[read_qr_codes[qr_goal_index]][1])
         print("New goal: QR Code: {}".format(goal_qr_id))
+        # TODO: calculate the new goal based on the qr_coordinate_frame (hidden frame)
+        #  get the trans and rot between map and hidden frame (only once needed?-->outside the while loop)
+        #  transform the new goal into map frame
         trans, delta = dict_global_qr_codes[read_qr_codes[qr_goal_index]][0]
         print("Translation: {}".format(trans))
         print("Delta: {}".format(delta))
         goal = np.array(trans) + np.array([-delta[1], delta[0], 0])
         print("Goal without offset: {}".format(goal))
         goal[2] = 0  # set z value to ground floor
-        offset = 1.1
-        x_goal = goal[0]
-        y_goal = goal[1]
-        if x_goal < 0 and y_goal < 0:  # third quadrant of map frame
-            print("Goal in third quadrant")
-            x_goal1 = x_goal + offset
-            x_goal2 = x_goal - offset
-            y_goal1 = y_goal + offset
-            y_goal2 = y_goal - offset
-            goals_list = [[goal[0], y_goal1], [goal[0], y_goal2], [x_goal1, goal[1]], [x_goal2, goal[1]]]
-        elif x_goal < 0 and y_goal > 0:  # fourth quadrant of map frame
-            print("Goal in fourth quadrant")
-            x_goal1 = x_goal + offset
-            x_goal2 = x_goal - offset
-            y_goal1 = y_goal - offset
-            y_goal2 = y_goal + offset
-            goals_list = [[goal[0], y_goal1], [goal[0], y_goal2], [x_goal1, goal[1]], [x_goal2, goal[1]]]
-        elif x_goal > 0 and y_goal > 0:
-            print("Goal in first quadrant")
-            x_goal1 = x_goal + offset
-            x_goal2 = x_goal - offset
-            y_goal1 = y_goal - offset
-            y_goal2 = y_goal + offset
-            goals_list = [[goal[0], y_goal1], [goal[0], y_goal2], [x_goal1, goal[1]], [x_goal2, goal[1]]]
-        elif x_goal > 0 and y_goal < 0:
-            print("Goal in second quadrant")
-            x_goal1 = x_goal + offset
-            x_goal2 = x_goal - offset
-            y_goal1 = y_goal - offset
-            y_goal2 = y_goal + offset
-            goals_list = [[goal[0], y_goal1], [goal[0], y_goal2], [x_goal1, goal[1]], [x_goal2, goal[1]]]
-        goal_feedback = goal_runner(goals_list_=goals_list, goal_qr_id_=goal_qr_id)
+        goal_feedback = goal_runner(goals_list_= goal, goal_qr_id_=goal_qr_id)
         if goal_feedback is False:
             print("No possible solution found")
             break
