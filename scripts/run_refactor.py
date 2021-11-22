@@ -60,7 +60,7 @@ while not rospy.is_shutdown():
                     try:
                         listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
                         (trans1, rot1) = listener.lookupTransform('/map', '/qr_frame', now)
-                        delta_qr = np.array(next_qr_locat) - np.array(current_qr_locat)
+                        #delta_qr = np.array(next_qr_locat) - np.array(current_qr_locat)
                         rot_euler = tf.transformations.euler_from_quaternion(rot1)
                     except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
                         print(e)
@@ -68,7 +68,7 @@ while not rospy.is_shutdown():
                         next_qr_numb = 1
                     else:
                         next_qr_numb = current_qr_numb + 1
-                    dict_global_qr_codes[current_qr_numb] = [[trans1, delta_qr], next_qr_numb]
+                    dict_global_qr_codes[current_qr_numb] = [[trans1, next_qr_locat], next_qr_numb]
                     rospy.sleep(3.)
                 except TypeError as e:
                     # avoiding error TypeError: time must have a to_sec method, e.g. rospy.Time or rospy.Duration
@@ -191,6 +191,17 @@ while not rospy.is_shutdown():
     print("\n#############################################################")
     print("#################### start focused search ####################")
     print("##############################################################")
+    # TODO Get transform from map to hidden frame
+    listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
+    now = rospy.Time.now()
+    try:
+        listener.waitForTransform('/map', 'qr_coordinate_frame', now, rospy.Duration(4.0))
+        (trans_map_hidden, rot_map_hidden) = listener.lookupTransform('/map', '/qr_coordinate_frame', now)
+        # TODO transform rotation matrix to euler
+    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
+        print(e)
+        # TODO how to handle errors here???????
+
     while random_search is False and goal_set is False:
         # check if current qr goal already read
         qr_goal_index = 0
@@ -204,13 +215,11 @@ while not rospy.is_shutdown():
         # TODO: calculate the new goal based on the qr_coordinate_frame (hidden frame)
         #  get the trans and rot between map and hidden frame (only once needed?-->outside the while loop)
         #  transform the new goal into map frame
-        trans, delta = dict_global_qr_codes[read_qr_codes[qr_goal_index]][0]
-        print("Translation: {}".format(trans))
-        print("Delta: {}".format(delta))
-        goal = np.array(trans) + np.array([-delta[1], delta[0], 0])
-        print("Goal without offset: {}".format(goal))
-        goal[2] = 0  # set z value to ground floor
-        goal_feedback = goal_runner(goals_list_= goal, goal_qr_id_=goal_qr_id)
+        trans, goal_hidden = dict_global_qr_codes[read_qr_codes[qr_goal_index]][0]
+        goal_map = goal_hidden * rot_map_hidden + trans_map_hidden  # rotate and translate goal into map frame
+        goal_map[2] = 0  # set z value to ground floor
+        print("Goal without offset: {}".format(goal_map))
+        goal_feedback = goal_runner(goals_list_= goal_map, goal_qr_id_=goal_qr_id)
         if goal_feedback is False:
             print("No possible solution found")
             break
