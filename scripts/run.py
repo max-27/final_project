@@ -15,7 +15,8 @@ robot = Robot()
 scan = Scan()
 transform = Transformation()
 
-bool_random_search = True
+search_qr_codes = True
+bool_random_search = False
 scan_output = None
 setting_target_goal = False
 dict_global_qr_codes = {}
@@ -34,21 +35,39 @@ def callback_status(msg):
 
 rospy.Subscriber("move_base/status", GoalStatusArray, callback_status)
 i = 0
+
+
+robot.move_to_origin()
+
 while not rospy.is_shutdown():
+    #print('Starting random search')
+
+    while search_qr_codes is True:
+        robot.focused_search()
+        scan.validate_scan()
+        if scan.validate_scan() is True:
+            
+            robot.canceling_goal()
+            print('Goal canceled')
+            search_qr_codes = False
+
+
+
 
     #################################################################
     ## Start-phase: Robot should find two QR codes with random search
     #################################################################
     while bool_random_search is True:
         if len(dict_global_qr_codes) < 2:
-            robot.random_search()
+            
             scan_output = scan.scan()
-
             if scan_output is not None:
                 robot.stop()
-                rospy.sleep(5.)
+                print('QR detection in progress')
+                rospy.sleep(10.)
+                
                 now = transform.get_qr_code()
-                rospy.sleep(5.)
+                rospy.sleep(10.)
                 # return of scan.scan [[curr_qr_pos, next_qr_pos, self.num_qr, msg_qr], [position, orientation]]
                 current_qr_numb = scan_output[0][2]
                 current_qr_locat = scan_output[0][0]
@@ -74,50 +93,50 @@ while not rospy.is_shutdown():
             print('Two QR codes found.')
             bool_random_search = False
             break
-
     #################################################################
     ##
-    #################################################################
-    transform.get_hidden_frame(now)
-    goal_set = False
-    # Focused search
-    read_qr_codes = dict_global_qr_codes.keys()
-    qr_goal_index = 0
-    while bool_random_search is False and goal_set is False:
-        # check if current qr goal already read
-        while dict_global_qr_codes[read_qr_codes[qr_goal_index]][1] in read_qr_codes:
-            qr_goal_index += 1
-        trans, delta = dict_global_qr_codes[read_qr_codes[qr_goal_index]][0]
-        goal = np.array(trans) + np.array([-delta[1], delta[0], 0])
-        goal[2] = 0
-        # offset
-        # TODO: seperate offset in 4 scenarios (goal +/- x-offset; goal+/- y-offset)
-        offset = 0.7
-        if goal[0] < 0 and goal[1] < 0:
-            goal[0] += offset
-            goal[1] += offset
-        elif goal[0] < 0 and goal[1] > 0:
-            goal[0] += offset
-            goal[1] -= offset
-        goal_set = True
-
-    robot.move_to_goal(goal, "map", str(read_qr_codes[qr_goal_index]))
-    rospy.sleep(1.)
-    print("Goal:{}".format(goal))
-    while bool_random_search is False and goal_set is True:
-        # TODO: goal status 4 "Goal not reachable"
-
-        if status_goal == 3 and str(read_qr_codes[i]) == status_id: # if goal reached
-            print("Goal reached: QR Code number {}".format(read_qr_codes[qr_goal_index]))
-            # scanning of new qr code
-            scan_output = scan.scan()
-            if scan_output is not None:
-                pass
-                # TODO get information
-            else:
-                pass
-                # TODO Adjust robot position if scanning not possible
-                # 1. turn slowly by 360 degrees
-                # 2. further adjustments
-            goal_set = False
-    rospy.spin()
+#    #################################################################
+#    transform.get_hidden_frame(now)
+#    goal_set = False
+#    
+#
+#
+#    # Focused search
+#    read_qr_codes = dict_global_qr_codes.keys()
+#    qr_goal_index = 0
+#    while bool_random_search is False and goal_set is False:
+#        # check if current qr goal already read
+#        while dict_global_qr_codes[read_qr_codes[qr_goal_index]][1] in read_qr_codes:
+#            qr_goal_index += 1
+#        trans, delta = dict_global_qr_codes[read_qr_codes[qr_goal_index]][0]
+#        goal = np.array(trans) + np.array([-delta[1], delta[0], 0])
+#        goal[2] = 0
+#        # offset
+#        # TODO: seperate offset in 4 scenarios (goal +/- x-offset; goal+/- y-offset)
+#        offset = 0.7
+#        if goal[0] < 0 and goal[1] < 0:
+#            goal[0] += offset
+#            goal[1] += offset
+#        elif goal[0] < 0 and goal[1] > 0:
+#            goal[0] += offset
+#            goal[1] -= offset
+#        goal_set = True
+#    robot.move_to_goal(goal, "map", str(read_qr_codes[qr_goal_index]))
+#    rospy.sleep(1.)
+#    print("Goal:{}".format(goal))
+#    while bool_random_search is False and goal_set is True:
+#        # TODO: goal status 4 "Goal not reachable"
+#        if status_goal == 3 and str(read_qr_codes[i]) == status_id: # if goal reached
+#            print("Goal reached: QR Code number {}".format(read_qr_codes[qr_goal_index]))
+#            # scanning of new qr code
+#            scan_output = scan.scan()
+#            if scan_output is not None:
+#                pass
+#                # TODO get information
+#            else:
+#                pass
+#                # TODO Adjust robot position if scanning not possible
+#                # 1. turn slowly by 360 degrees
+#                # 2. further adjustments
+#            goal_set = False
+#   rospy.spin()

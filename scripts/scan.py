@@ -22,6 +22,18 @@ class Scan:
         # message looks like this:
         # <data: "X=2.67\r\nY=3.23\r\nX_next=0.1\r\nY_next=3.5\r\nN=2\r\nL=M">
         self.code_message = msg.data
+        
+
+
+    def validate_scan(self):
+        print(self.object_position.position.z)
+
+        if len(self.code_message)>2 and (self.object_position.position.z < 2):
+            print(self.object_position.position.z)
+            return True
+        else:
+            return False
+
 
     def scan(self, search_id="", specific_search=False):
         # next_qr_pos = rospy.wait_for_message("/visp_auto_tracker/object_position", PoseStamped)
@@ -30,11 +42,11 @@ class Scan:
             if self.object_position is not None and self.code_message is not None:
                 position = self.object_position.position
                 orientation = self.object_position.orientation
-                pos_x, pos_y, pos_z = position.x, position.y, position.z
+                pos_x, pos_y, self.pos_z = position.x, position.y, position.z
                 orien_x, orien_y, orien_z, orien_w = orientation.x, orientation.y, orientation.z, orientation.w
 
-                if pos_x + pos_y + pos_z + orien_x + orien_y + orien_z + orien_w != 1:
-                    if pos_x != 0. and pos_y != 0. and pos_z != 0. and self.code_message != "":
+                if pos_x + pos_y + self.pos_z + orien_x + orien_y + orien_z + orien_w != 1:
+                    if pos_x != 0. and pos_y != 0. and self.pos_z != 0. and self.code_message != "":
                         try:
                             msg_list = [i.rsplit("=", 1)[1] for i in self.code_message.split("\r\n")]
                         except TypeError as e:
@@ -64,9 +76,4 @@ class Scan:
         except IndexError:
             pass
 
-# def validate_scan(self):
-#	if self.num_qr not in self.qr_dict.keys():
-#		self.qr_dict[self.num_qr] = True
-#		return True
-#	else:
-#		return False
+   
