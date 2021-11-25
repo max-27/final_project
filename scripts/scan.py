@@ -26,9 +26,8 @@ class Scan:
 
 
     def validate_scan(self):
-        print(self.object_position.position.z)
-
-        if len(self.code_message)>2 and (self.object_position.position.z < 2):
+        print('Validating scan, z:{}'.format(self.object_position.position.z))
+        if len(self.code_message)>2 and (self.object_position.position.z < 1.5):
             print(self.object_position.position.z)
             return True
         else:

@@ -34,17 +34,16 @@ class Robot:
     #self.simple_goal.pose.position.x = 0.0
     #self.simple_goal.pose.position.y = 0.0
     self.checkpoint = 0
-    self.nextCheckPoint = [-5.,2.]
+    self.nextCheckPoint = [-5.5,2.]
     self.running = False
-    self.status_goal = ''
-    
     
 
   def _goal_status_callback(self, msg):
     if len(msg.status_list) > 0:
-        self.status_goal = msg.status_list[0].status
-        #self.status_id = msg.status_list[0].goal_id.id
-
+      self.status_goal = msg.status_list[0].status
+    else:
+      self.status_goal = ''
+    
 
   def scan_callback(self, msg):
     #global g_range_ahead
@@ -69,9 +68,11 @@ class Robot:
     self.simple_goal.pose.position.y = goal_coordinates[1]
     self.simple_goal.pose.orientation.w = 1.0
     print('Published goal:{}'.format(self.simple_goal))
+    
+
     #print('Goal status: {}'.format(self.status_id))
     self.pub_goal_simple.publish(self.simple_goal)
-    rospy.sleep(2.) #to not flood the terminal
+    
 
 
   def canceling_goal(self):
@@ -81,26 +82,31 @@ class Robot:
 
   def focused_search(self):
     
+    
     if self.running == False:
+      rospy.sleep(2.)
+      print('Robot is receives coordinates to:{}'.format(self.nextCheckPoint))
 
-      print('Calling Simple move')
       self.simple_move_to_goal(self.nextCheckPoint, frame_id="map")
+
+      rospy.sleep(3.)
+      
 
       self.running = True
 
-    elif self.status_goal == 3:
-      rospy.sleep(5.)  
-      self.status_goal=0
-      rospy.sleep(5.)
-      print("Checkpoint reached")
-      self.checkpoint = self.checkpoint + 1
-      self.running = False
+
+    elif self.status_goal == 1 and self.running is True:
+      print("Running")
+
+    elif self.status_goal == 2 and self.running is True:
+      print('Goal canceled. Robot starts turning.')
       
-      self.turn()
 
-      rospy.sleep(30.)
-
-
+    elif self.status_goal == 3 and self.running is True:
+      print("Checkpoint reached")
+      
+      #rospy.sleep(30.)
+      
 
       if self.checkpoint == 1:
         print('Status Checkpoint 1')
@@ -115,42 +121,35 @@ class Robot:
         self.nextCheckPoint[1] = -1*self.nextCheckPoint[1]
       
       elif self.checkpoint == 4:
-        print('Status Goal 4')
+        print('Status Checkpoint 4')
         print("Expanding search")
-        self.nextCheckPoint[0] = abs(self.nextCheckPoint[0]) + 1
-        self.nextCheckPoint[1] = abs(self.nextCheckPoint[1]) + 0.5
+        self.nextCheckPoint[0] = abs(self.nextCheckPoint[0]) - 1
+        self.nextCheckPoint[1] = abs(self.nextCheckPoint[1]) - 0.5
         self.checkpoint = 1
-      
-     # else:
-     #   print("Search failed, starting over")
-     #   self.checkpoint = 1
-     #   self.nextCheckPoint[0] = 5.
-     #   self.nextCheckPoint[1] = 2.
-     #   self.moveResult = "Nothing"
+      self.checkpoint = self.checkpoint + 1
+      rospy.sleep(2.)
+      self.running = False
+      self.canceling_goal()
+     
 
-
-    elif self.status_goal == 4:
+    elif self.status_goal == 4 and self.running is True:
       print("Goal not reachable, going to next one")
-      self.status_goal = 3
+      self.status_goal = 3 
+      self.running = False
 
-    else:
-      print("Running")
-      print('Checkpoint: {}'.format(self.checkpoint))
-      print('Status goal:{}'.format(self.status_goal))
-
-      rospy.sleep(2.) #to not flood the terminal
+  
 
 
-
-  def move_to_origin(self,frame_id='map'):
-    self.simple_goal.header.frame_id = frame_id
-    self.simple_goal.pose.position.x = 0.
-    self.simple_goal.pose.position.y = 0.
-    self.simple_goal.pose.orientation.w = 1.
-    print('Moving to origin')
+  def move_to_checkpoint(self,frame_id='map'):
     rospy.sleep(3.)
+    self.simple_goal.header.frame_id = frame_id
+    self.simple_goal.pose.position.x = self.nextCheckPoint[0]
+    self.simple_goal.pose.position.y = self.nextCheckPoint[1]
+    self.simple_goal.pose.orientation.w = 1.
+    print('Published goal:{}'.format(self.simple_goal))
     self.pub_goal_simple.publish(self.simple_goal)
-    rospy.sleep(15.)
+    print('Inside function move_first checkpoint, status: {}'.format(self.goal))
+    rospy.sleep(3.)
 
 
   def move_to_goal(self, goal_robot, id,frame_id='map'):
@@ -164,7 +163,7 @@ class Robot:
     self.goal.goal.target_pose.pose.orientation.y = 0.
     self.goal.goal.target_pose.pose.orientation.z = 0.
     self.goal.goal.target_pose.pose.orientation.w = 1.
-    print(self.goal)
+    print('Inside function move_to_goal, status: {}'.format(self.goal))
     self.goal_pub.publish(self.goal)
 
   def turn(self):
