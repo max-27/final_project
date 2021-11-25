@@ -22,7 +22,7 @@ scan_output = None
 setting_target_goal = False
 dict_global_qr_codes = {}
 dict_hidden_qr_codes = {}
-
+spinning_time = rospy.Duration(secs=10)
 listener = tf.TransformListener()
 
 status_id = ''
@@ -49,43 +49,58 @@ while not rospy.is_shutdown():
             #rospy.sleep(2.)
             print(status_goal)
             if status_goal == 3:
-                search_qr_codes = False
 
                 print('Status 3')
-                robot.turn()
-                
-
-    while search_qr_codes is False:
-        print('Turn and find qr code')
-        scan_output = scan.scan()
-        if scan_output is not None:
+                start_timer = rospy.get_rostime()
+                finish_timer = rospy.get_rostime()
+                print('####################')
+                print('Exploring Environment by turning')
+                print('####################')
+        
+                while (finish_timer-start_timer)<spinning_time:
+                    
+                    robot.turn()
+                    scan_output = scan.scan()
+                    finish_timer = rospy.get_rostime()
+                    if scan_output is not None:
+                            print('Scanning QR Code')
+                            robot.stop()
+                            rospy.sleep(2.)
+                            # avoiding error TypeError: time must have a to_sec method, e.g. rospy.Time or rospy.Duration
+                            now = transform.get_qr_code()
+                            # now_sec = now_out.to_sec()
+                            # now = rospy.Time(now_sec)
+                            rospy.sleep(2.)
+                            current_qr_numb = scan_output[0][2]
+                            current_qr_locat = scan_output[0][0]
+                            next_qr_locat = scan_output[0][1]
+                            try:
+                                listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
+                                try:
+                                    listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
+                                    (trans1, rot1) = listener.lookupTransform('/map', '/qr_frame', now)
+                                    delta_qr = np.array(next_qr_locat) - np.array(current_qr_locat)
+                                    rot_euler = tf.transformations.euler_from_quaternion(rot1)
+                                except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
+                                    print(e)
+                                if current_qr_numb == 5:
+                                    next_qr_numb = 1
+                                else:
+                                    next_qr_numb = current_qr_numb + 1
+                                dict_global_qr_codes[current_qr_numb] = [[trans1, delta_qr], next_qr_numb]
+                                rospy.sleep(3.)
+                            except TypeError as e:
+                                print("Found QR Code but transform listener failed...")
+                                # delete latest qr scan after failed transform listening
+                                del scan.qr_dict[scan.num_qr]
+                                print(scan.qr_dict)
+                                print("...continue random search!")
+        else:
             robot.stop()
-            print('QR detection in progress')
-            rospy.sleep(10.)
-            
-            now = transform.get_qr_code()
-            rospy.sleep(10.)
-            # return of scan.scan [[curr_qr_pos, next_qr_pos, self.num_qr, msg_qr], [position, orientati
-            current_qr_numb = scan_output[0][2]
-            current_qr_locat = scan_output[0][0]
-            next_qr_locat = scan_output[0][1]
-            listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
-            try:
-                
-                listener.waitForTransform('/map', 'qr_frame', now, rospy.Duration(4.0))
-                now = rospy.Time.now()
-                (trans1, rot1) = listener.lookupTransform('/map', '/qr_frame', now)
-                print(trans1)
-                delta_qr = np.array(next_qr_locat) - np.array(current_qr_locat)
-                rot_euler = tf.transformations.euler_from_quaternion(rot1)
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-                print(e)
-            if current_qr_numb == 5:
-                next_qr_numb = 1
-            else:
-                next_qr_numb = current_qr_numb + 1
-            dict_global_qr_codes[current_qr_numb] = [[trans1, delta_qr], next_qr_numb]
-            rospy.sleep(3.)           
+            print('Two QR codes found.')
+            search_qr_codes = False
+            robot.canceling_goal()
+            break
 
 #
             #elif status_goal ==2:
