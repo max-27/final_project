@@ -125,11 +125,12 @@ class Transformation:
 		except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
 			print(e)
 
+		final_now = rospy.Time.now()
 		self.pr.sendTransform(trans2, rot2,
-								rospy.Time.now(),
+								final_now,
 								"qr_coordinate_frame",
 								"map")
-		return success
+		return final_now
 
 """
 class Transformations:

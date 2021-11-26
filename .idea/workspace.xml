@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7d928eaf-4ded-477f-a0e4-7bf981ba0c89" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/final_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/final_project.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/run_refactor.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_refactor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/transformations.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/transformations.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +45,7 @@
       <option name="presentableId" value="Default" />
       <updated>1637589989594</updated>
       <workItem from="1637589994868" duration="3350000" />
+      <workItem from="1637706705533" duration="616000" />
     </task>
     <servers />
   </component>
@@ -57,5 +62,17 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/scripts/run_refactor.py</url>
+          <line>2</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
