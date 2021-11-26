@@ -37,7 +37,6 @@ dict_global_qr_codes = {}
 dict_hidden_qr_codes = {}
 listener = tf.TransformListener()
 rospy.Subscriber("move_base/status", GoalStatusArray, callback_status)
-#i = 0
 while not rospy.is_shutdown():
     #################################################################
     # Start-phase: Robot should find two QR codes with random search
@@ -88,9 +87,9 @@ while not rospy.is_shutdown():
         print("Goal with offset:{}".format(goal_))
         qr_id = int(id_.split("/")[0])
         robot.move_to_goal(goal_, "map", id_)
-        rospy.sleep(5.)
-        goal_set = True
-        while goal_set is True:
+        rospy.sleep(10.)
+        goal_set_ = True
+        while goal_set_:
             if status_goal == 4:  # goal status 4 "Goal not reachable"
                 print("Goal not reachable...")
                 robot.cancel_goal(id_)
@@ -103,33 +102,32 @@ while not rospy.is_shutdown():
                 print(status_goal)
                 print("Goal reached: QR Code number {}".format(qr_id))
                 # scanning of new qr code
-                scan_output = scan.scan(search_id=qr_id, specific_search=True)
-                if scan_output is not None and int(scan_output[0][2]) == qr_id:
+                scan_output_ = scan.scan(search_id=qr_id, specific_search=True)
+                if scan_output_ is not None and int(scan_output_[0][2]) == qr_id:
                     print("Found qr code after reaching goal")
-                    return True, scan_output
+                    return True, scan_output_
                 else:
                     print("Reached goal but not able to scan")
-                    time_threshold = 15.
                     print("Start spinning once")
-                    robot.spin_360(spinning_speed=0.5 * math.pi / time_threshold)
+                    robot.spin_360(spinning_speed=settings.SPIN_SPEED)
                     start_time = time.time()
                     end_time = 0
-                    while (scan_output is None) and (
-                            end_time - start_time < time_threshold * 5):  # TODO how to get time for one spin?
-                        scan_output = scan.scan(search_id=qr_id, specific_search=True)
-                        if scan_output is not None and int(scan_output[0][2]) == qr_id:
+                    while (scan_output_ is None) and (
+                            end_time - start_time < settings.SPIN_TIME * 5):  # TODO how to get time for one spin?
+                        scan_output_ = scan.scan(search_id=qr_id, specific_search=True)
+                        if scan_output_ is not None and int(scan_output_[0][2]) == qr_id:
                             break
                         rospy.sleep(1.)
                         end_time = time.time()
                     print("Stop robot after spinning")
                     robot.stop()
                     rospy.sleep(3.)
-                    if scan_output is not None and int(scan_output[0][2]) == int(id_.split("/")[0]):
+                    if scan_output_ is not None and int(scan_output_[0][2]) == int(id_.split("/")[0]):
                         print("Found qr code during spinning")
                         robot.stop()
                         rospy.sleep(3.)
-                        return True, scan_output
-                    elif (end_time - start_time) >= time_threshold * 4:  # after spinning no qr code found
+                        return True, scan_output_
+                    elif (end_time - start_time) >= settings.SPIN_TIME * 5:  # after spinning no qr code found
                         print("After spinning no qr code found")
                         return False, None
 

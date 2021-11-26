@@ -3,17 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7d928eaf-4ded-477f-a0e4-7bf981ba0c89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/maps/map.pgm" beforeDir="false" afterPath="$PROJECT_DIR$/maps/map.pgm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/maps/map.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/maps/map.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/mapping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/navigation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/robot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/obstacle.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/run.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/run_refactor.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_refactor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/spawn_markers.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/spawn_markers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/tflistener.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/transformations.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/transformations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +48,7 @@
       <updated>1637589989594</updated>
       <workItem from="1637589994868" duration="3350000" />
       <workItem from="1637706705533" duration="616000" />
-      <workItem from="1637913078065" duration="9408000" />
+      <workItem from="1637913078065" duration="11983000" />
     </task>
     <servers />
   </component>
