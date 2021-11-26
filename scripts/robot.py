@@ -3,11 +3,11 @@
 import rospy
 import tf
 from tf.transformations import euler_from_quaternion
-from geometry_msgs.msg import Twist, PoseWithCovarianceStamped
+from geometry_msgs.msg import Twist, PoseWithCovarianceStamped, PoseStamped
 from sensor_msgs.msg import LaserScan
 from gazebo_msgs.msg import ModelStates
 from move_base_msgs.msg import MoveBaseActionGoal
-from actionlib_msgs.msg import GoalID
+from actionlib_msgs.msg import GoalID, GoalStatusArray
 
 
 class Robot:
@@ -19,13 +19,25 @@ class Robot:
         self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         self.goal_pub = rospy.Publisher('move_base/goal', MoveBaseActionGoal, queue_size=1)
         self.cancel_pub = rospy.Publisher('move_base/cancel', GoalID, queue_size=1)
+        self.pub_cancel_goal = rospy.Publisher('move_base/cancel', GoalID, queue_size=1)
+        self.pub_goal_simple = rospy.Publisher('move_base_simple/goal', PoseStamped, queue_size=1.)
+        self.sub_status = rospy.Subscriber("move_base/status", GoalStatusArray, self._goal_status_callback)
         self.driving_forward = True
         self.twist = Twist()
         self.goal = MoveBaseActionGoal()
         self.cancel_msg = GoalID()
         self.listener = tf.TransformListener()
         self.rate = rospy.Rate(1.0)
-        # rospy.init_node('navigation')
+        self.simple_goal = PoseStamped()
+        self.checkpoint = 0
+        self.nextCheckPoint = [-5.5, 2.]
+        self.running = False
+
+    def _goal_status_callback(self, msg):
+        if len(msg.status_list) > 0:
+            self.status_goal = msg.status_list[0].status
+        else:
+            self.status_goal = ''
 
     def scan_callback(self, msg):
         # global g_range_ahead
@@ -85,6 +97,91 @@ class Robot:
         self.twist.linear.x = 0.
         self.twist.linear.y = 0.
         self.twist.angular.z = 0.
+        self.cmd_vel_pub.publish(self.twist)
+
+    def focused_search(self):
+
+        if self.running == False:
+            rospy.sleep(2.)
+            print('Robot is receives coordinates to:{}'.format(self.nextCheckPoint))
+
+            self.simple_move_to_goal(self.nextCheckPoint, frame_id="map")
+
+            rospy.sleep(3.)
+
+            self.running = True
+
+
+        elif self.status_goal == 1 and self.running is True:
+            print("Running")
+
+        elif self.status_goal == 2 and self.running is True:
+            print('Goal canceled. Robot starts turning.')
+
+
+        elif self.status_goal == 3 and self.running is True:
+            print("Checkpoint reached")
+
+            # rospy.sleep(30.)
+
+            if self.checkpoint == 1:
+                print('Status Checkpoint 1')
+                self.nextCheckPoint[1] = -1 * self.nextCheckPoint[1]
+
+            elif self.checkpoint == 2:
+                print('Status Checkpoint 2')
+                self.nextCheckPoint[0] = -1 * self.nextCheckPoint[0]
+
+            elif self.checkpoint == 3:
+                print('Status Checkpoint 3')
+                self.nextCheckPoint[1] = -1 * self.nextCheckPoint[1]
+
+            elif self.checkpoint == 4:
+                print('Status Checkpoint 4')
+                print("Expanding search")
+                self.nextCheckPoint[0] = abs(self.nextCheckPoint[0]) - 1
+                self.nextCheckPoint[1] = abs(self.nextCheckPoint[1]) - 0.5
+                self.checkpoint = 1
+            self.checkpoint = self.checkpoint + 1
+            rospy.sleep(2.)
+            self.running = False
+            self.canceling_goal()
+
+
+        elif self.status_goal == 4 and self.running is True:
+            print("Goal not reachable, going to next one")
+            self.status_goal = 3
+            self.running = False
+
+    def move_to_checkpoint(self, frame_id='map'):
+        rospy.sleep(3.)
+        self.simple_goal.header.frame_id = frame_id
+        self.simple_goal.pose.position.x = self.nextCheckPoint[0]
+        self.simple_goal.pose.position.y = self.nextCheckPoint[1]
+        self.simple_goal.pose.orientation.w = 1.
+        print('Published goal:{}'.format(self.simple_goal))
+        self.pub_goal_simple.publish(self.simple_goal)
+        print('Inside function move_first checkpoint, status: {}'.format(self.goal))
+        rospy.sleep(3.)
+
+    def simple_move_to_goal(self, goal_coordinates, frame_id='map'):
+
+        self.simple_goal.header.frame_id = frame_id
+        self.simple_goal.pose.position.x = goal_coordinates[0]
+        self.simple_goal.pose.position.y = goal_coordinates[1]
+        self.simple_goal.pose.orientation.w = 1.0
+        #print('Published goal:{}'.format(self.simple_goal))
+
+        # print('Goal status: {}'.format(self.status_id))
+        self.pub_goal_simple.publish(self.simple_goal)
+
+    def canceling_goal(self):
+        # self.cancel_goal.id = str(self.checkpoint)
+        self.pub_cancel_goal.publish(self.cancel_goal)
+
+    def turn(self):
+        self.twist.linear.x = 0.0
+        self.twist.angular.z = 0.05
         self.cmd_vel_pub.publish(self.twist)
 
     def get_current_position(self):

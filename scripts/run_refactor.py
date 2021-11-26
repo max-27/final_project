@@ -41,44 +41,54 @@ while not rospy.is_shutdown():
     #################################################################
     # Start-phase: Robot should find two QR codes with random search
     #################################################################
+    counter = 0
     while random_search is True:
         if len(dict_global_qr_codes) < 2:
-            robot.random_search()
-            scan_output = scan.scan()
-            if scan_output is not None:
-                robot.stop()
-                rospy.sleep(3.)
-                if transform.code is not "":  # check if after stopping QR is still in reach
-                    now = transform.get_qr_code()
-                    rospy.sleep(5.)
-                    current_qr_numb = scan_output[0][2]
-                    current_qr_locat = scan_output[0][0]
-                    next_qr_locat = scan_output[0][1]
-                    message = scan_output[0][-1]
-                    try:
-                        if current_qr_numb == 5:
-                            next_qr_numb = 1
-                        else:
-                            next_qr_numb = current_qr_numb + 1
-                        next_qr_locat.append(0)
-                        dict_global_qr_codes[current_qr_numb] = [[message, next_qr_locat], next_qr_numb]
+            #robot.random_search()
+            if counter == 0:
+                robot.focused_search()
+            if status_goal == 3:
+                start_timer = rospy.get_rostime()
+                finish_timer = rospy.get_rostime()
+                while (finish_timer - start_timer) < settings.SPIN_TIME_SELECT_SEARCH:
+                    robot.turn()
+                    scan_output = scan.scan()
+                    finish_timer = rospy.get_rostime()
+                    if scan_output is not None:
+                        robot.stop()
                         rospy.sleep(3.)
-                    except TypeError as e:
-                        # avoiding error TypeError: time must have a to_sec method, e.g. rospy.Time or rospy.Duration
-                        print("Found QR Code but transform listener failed...")
-                        # delete latest qr scan after failed transform listening
-                        del scan.qr_dict[scan.num_qr]
-                        print(scan.qr_dict)
-                        print("...continue random search!")
-                else:
-                    del scan.qr_dict[scan.num_qr]
-                    print(scan.qr_dict)
-                    print("QR is out  of reach after stopping: Continue search")
+                        if transform.code is not "":  # check if after stopping QR is still in reach
+                            now = transform.get_qr_code()
+                            rospy.sleep(5.)
+                            current_qr_numb = scan_output[0][2]
+                            current_qr_locat = scan_output[0][0]
+                            next_qr_locat = scan_output[0][1]
+                            message = scan_output[0][-1]
+                            try:
+                                if current_qr_numb == 5:
+                                    next_qr_numb = 1
+                                else:
+                                    next_qr_numb = current_qr_numb + 1
+                                next_qr_locat.append(0)
+                                dict_global_qr_codes[current_qr_numb] = [[message, next_qr_locat], next_qr_numb]
+                                rospy.sleep(3.)
+                            except TypeError as e:
+                                # avoiding error TypeError: time must have a to_sec method, e.g. rospy.Time or rospy.Duration
+                                print("Found QR Code but transform listener failed...")
+                                # delete latest qr scan after failed transform listening
+                                del scan.qr_dict[scan.num_qr]
+                                print(scan.qr_dict)
+                                print("...continue random search!")
+                        else:
+                            del scan.qr_dict[scan.num_qr]
+                            print(scan.qr_dict)
+                            print("QR is out  of reach after stopping: Continue search")
         else:
             robot.stop()
             print('Two QR codes found.')
             random_search = False
             break
+        counter += 1
 
     #################################################################
     # helper functions
@@ -138,13 +148,13 @@ while not rospy.is_shutdown():
         # return of scan.scan [[curr_qr_pos, next_qr_pos, self.num_qr, msg_qr], [position, orientation]]
         current_qr_numb_ = s_output[0][2]
         next_qr_locat_ = s_output[0][1]
-        message = scan_output[0][-1]
+        message_ = s_output[0][-1]
         if current_qr_numb_ == 5:
             next_qr_numb_ = 1
         else:
             next_qr_numb_ = current_qr_numb_ + 1
         next_qr_locat_.append(0)
-        dict_global_qr_codes[current_qr_numb_] = [[message, next_qr_locat_], next_qr_numb_]
+        dict_global_qr_codes[current_qr_numb_] = [[message_, next_qr_locat_], next_qr_numb_]
         rospy.sleep(3.)
 
 
@@ -162,9 +172,23 @@ while not rospy.is_shutdown():
             for num_tries_, curr_goal_ in enumerate(goals_list_):
                 if success_ is False:
                     print("Set goal with offset option number {}".format(num_tries_ + 1))
-                    success_, scan_output_ = run_to_goal(curr_goal_, str(goal_qr_id_) + "/" + str(try_counter) + str(
-                        num_tries_ + 1))
-                if success_:
+                    id_ = str(goal_qr_id_) + "/" + str(try_counter) + str(num_tries_ + 1)
+                    success_, scan_output_ = run_to_goal(curr_goal_, id_)
+                if success_ and scan_output_ is None:  # QR was readable but scanning was unsuccessful
+                    print("QR was readable but scanning was unsuccessful")
+                    print("Spin again")
+                    qr_id = int(id_.split("/")[0])
+                    robot.spin_360(spinning_speed=settings.SPIN_SPEED-0.025)
+                    start_time = time.time()
+                    end_time = 0
+                    while (scan_output_ is None) and (
+                            end_time - start_time < settings.SPIN_TIME * 5):  # TODO how to get time for one spin?
+                        scan_output_ = scan.scan(search_id=qr_id, specific_search=True)
+                        if scan_output_ is not None and int(scan_output_[0][2]) == qr_id:
+                            break
+                        rospy.sleep(1.)
+                        end_time = time.time()
+                if success_ and scan_output_ is not None:
                     get_infos(scan_output_)
                     curr_msg = get_secret_msg(dict_global_qr_codes)
                     print("\n##############################################################")
