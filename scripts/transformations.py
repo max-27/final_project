@@ -51,7 +51,6 @@ class Transformation:
 									now,
 									"qr_frame",
 									"camera_optical_link")
-			print("Send transform to qr_frame")
 			#rospy.sleep(3.)
 			self.listener.waitForTransform("/map", "/qr_frame", now, rospy.Duration(4.0))
 			try:

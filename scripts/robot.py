@@ -79,7 +79,6 @@ class Robot:
     def spin_360(self, spinning_speed=0.05):
         self.twist.angular.z = spinning_speed
         self.cmd_vel_pub.publish(self.twist)
-        print("Published spinning")
 
     def stop(self):
         # print("Stop robot")

@@ -2,11 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7d928eaf-4ded-477f-a0e4-7bf981ba0c89" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/final_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/final_project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/maps/map.pgm" beforeDir="false" afterPath="$PROJECT_DIR$/maps/map.pgm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/maps/map.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/maps/map.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/mapping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/navigation.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/robot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/obstacle.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/run.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/run_refactor.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_refactor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/spawn_markers.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/spawn_markers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/tflistener.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/transformations.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/transformations.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,6 +42,11 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scripts/graveyard" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -46,6 +57,7 @@
       <updated>1637589989594</updated>
       <workItem from="1637589994868" duration="3350000" />
       <workItem from="1637706705533" duration="616000" />
+      <workItem from="1637913078065" duration="9408000" />
     </task>
     <servers />
   </component>
@@ -63,16 +75,5 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/scripts/run_refactor.py</url>
-          <line>2</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
