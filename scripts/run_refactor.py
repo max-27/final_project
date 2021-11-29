@@ -109,7 +109,6 @@ while not rospy.is_shutdown():
                 return False, None
             elif status_goal == 3 and id_ == status_id:  # if goal reached
                 rospy.sleep(4.)
-                print(status_goal)
                 print("Goal reached: QR Code number {}".format(qr_id))
                 # scanning of new qr code
                 scan_output_ = scan.scan(search_id=qr_id, specific_search=True)
@@ -226,7 +225,10 @@ while not rospy.is_shutdown():
         euler_angle = euler_from_quaternion(rot_map_hidden)
         rotation_matrix = tf.transformations.euler_matrix(euler_angle[0], euler_angle[1], euler_angle[2])[:3, :3]
     except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-        print(e)
+        listener.waitForTransform('/map', 'qr_coordinate_frame', now_map_hidden, rospy.Duration(4.0))
+        (trans_map_hidden, rot_map_hidden) = listener.lookupTransform('/map', '/qr_coordinate_frame', rospy.Time.now())
+        euler_angle = euler_from_quaternion(rot_map_hidden)
+        rotation_matrix = tf.transformations.euler_matrix(euler_angle[0], euler_angle[1], euler_angle[2])[:3, :3]
 
     while random_search is False and goal_set is False:
         # check if current qr goal already read

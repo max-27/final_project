@@ -103,7 +103,7 @@ class Robot:
 
         if self.running == False:
             rospy.sleep(2.)
-            print('Robot is receives coordinates to:{}'.format(self.nextCheckPoint))
+            print('Robot receives coordinates to:{}'.format(self.nextCheckPoint))
 
             self.simple_move_to_goal(self.nextCheckPoint, frame_id="map")
 

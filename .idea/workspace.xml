@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7d928eaf-4ded-477f-a0e4-7bf981ba0c89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/scripts/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/robot.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/robot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/run_refactor.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_refactor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +49,7 @@
       <workItem from="1637589994868" duration="3350000" />
       <workItem from="1637706705533" duration="616000" />
       <workItem from="1637913078065" duration="11983000" />
+      <workItem from="1638184406743" duration="730000" />
     </task>
     <servers />
   </component>
