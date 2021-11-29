@@ -12,7 +12,7 @@ For running the robot and performing the task of the project, you can run:
 rosrun final_project run.py
 ```
 The code is seperated into three main modules:
-- The `Scan` class, that is responsible for scanning the QR encodes and 
+- `Scan` class, that is responsible for scanning the QR encodes and 
 storing its encodes message
-- The `Robot` class, that performs the movement and navigation of the robot
-- The `Transformation` class, that calculates the hidden frame of reference of the QR codes
+- `Robot` class, that performs the movement and navigation of the robot
+- `Transformation` class, that calculates the hidden frame of reference of the QR codes
